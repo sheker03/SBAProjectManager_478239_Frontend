@@ -17,28 +17,28 @@ export class ServiceProjectService {
   constructor(private http:HttpClient) { }
 
   getProjects():Observable<ProjectTable[]>{
-    return this.http.get<ProjectTable[]>('http://localhost/ProjectManager.API/' + 'GetAllProjects');  
+    return this.http.get<ProjectTable[]>('http://localhost/ProjectManagerService/' + 'GetAllProjects');  
   }
 
   getProjectByID(projectID: string):Observable<ProjectTable>{
-    return this.http.get<ProjectTable>('http://localhost/ProjectManager.API/' + 'GetProjectByID',{params : {id:projectID}});
+    return this.http.get<ProjectTable>('http://localhost/ProjectManagerService/' + 'GetProjectByID',{params : {id:projectID}});
   }
 
   getProjectDetails():Observable<ProjectDetails[]>{
-    return this.http.get<ProjectDetails[]>('http://localhost/ProjectManager.API/' + 'GetAllProjectDetails');
+    return this.http.get<ProjectDetails[]>('http://localhost/ProjectManagerService/' + 'GetAllProjectDetails');
   }
 
 
   addProject(projectToAdd : ProjectDetails) : Observable<ProjectDetails>{
      console.log(JSON.stringify({ projectToAdd }));
-     return this.http.post<ProjectDetails>('http://localhost/ProjectManager.API/' + 'PostProject',  projectToAdd, httpOptions );
+     return this.http.post<ProjectDetails>('http://localhost/ProjectManagerService/' + 'PostProject',  projectToAdd, httpOptions );
   }
 
   updateProject(projectToUpdate : ProjectDetails):Observable<ProjectDetails>{
-    return this.http.put<ProjectDetails>('http://localhost/ProjectManager.API/' + 'UpdateProject',  projectToUpdate, httpOptions);
+    return this.http.put<ProjectDetails>('http://localhost/ProjectManagerService/' + 'UpdateProject',  projectToUpdate, httpOptions);
   }
 
   deleteProject(projectID: string):Observable<any>{
-      return this.http.delete<any>('http://localhost/ProjectManager.API/' + 'DeleteProject',{params : {id:projectID}});
+      return this.http.delete<any>('http://localhost/ProjectManagerService/' + 'DeleteProject',{params : {id:projectID}});
   }
 }

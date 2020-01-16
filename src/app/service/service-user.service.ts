@@ -15,25 +15,25 @@ export class ServiceUserService {
   constructor(private http : HttpClient) { }
 
   getUsers():Observable<UserTable[]>{
-    return this.http.get<UserTable[]>('http://localhost/ProjectManager.API/' + 'GetAllUsers');
+    return this.http.get<UserTable[]>('http://localhost/ProjectManagerService/' + 'GetAllUsers');
     //  .pipe(map((res:Response)=> res.json()));
   }
 
   getUserByID(userID: string):Observable<UserTable>{
-    return this.http.get<UserTable>('http://localhost/ProjectManager.API/' + 'GetUserByID',{params : {id:userID}});
+    return this.http.get<UserTable>('http://localhost/ProjectManagerService/' + 'GetUserByID',{params : {id:userID}});
   }
 
 
   addUser(userToAdd : UserTable) : Observable<UserTable>{
      console.log(JSON.stringify({ userToAdd }));
-     return this.http.post<UserTable>('http://localhost/ProjectManager.API/' + 'PostUser',  userToAdd, httpOptions );
+     return this.http.post<UserTable>('http://localhost/ProjectManagerService/' + 'PostUser',  userToAdd, httpOptions );
   }
 
   updateUser(userToUpdate : UserTable):Observable<UserTable>{
-    return this.http.put<UserTable>('http://localhost/ProjectManager.API/' + 'UpdateUser',  userToUpdate, httpOptions);
+    return this.http.put<UserTable>('http://localhost/ProjectManagerService/' + 'UpdateUser',  userToUpdate, httpOptions);
   }
 
   deleteUser(userID: string):Observable<any>{
-      return this.http.delete<any>('http://localhost/ProjectManager.API/' + 'DeleteUser',{params : {id:userID}});
+      return this.http.delete<any>('http://localhost/ProjectManagerService/' + 'DeleteUser',{params : {id:userID}});
   }
 }
