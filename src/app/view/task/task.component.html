@@ -1,1 +1,252 @@
 <p>task works!</p>
+<br>
+<div class="container-fluid">
+  <div class="row align-items-start jumbotron">
+    <div class="col">
+      <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label"> Project</label>
+          <div class="col-sm-7">
+            <input type="text" class="form-control" [(ngModel)]="selectedProjectName"
+              [ngModelOptions]="{standalone: true}">
+          </div>
+
+          <button id="btnSearchProject" type="button" class="col-lg-auto btn btn-secondary" data-toggle="modal"
+            data-target="#modalProject" (click)="searchProject()">Search</button>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label"> Task</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" formControlName="Task_Name">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-1"></div>
+          <div class="form-check col-sm-8">
+            <input class="form-check-input" type="checkbox" (change)="isParentTaskChecked($event)" id="chkIsParentTask">
+            <label class="form-check-label" for="chkIsParentTask">
+              Parent Task
+            </label>
+          </div>
+        </div>
+        <div class="form-group row" id="rowPriority">
+          <label class="col-sm-4 col-form-label"> Priority</label>
+          <div class="col-sm-8">
+            <input type="range" class="form-control" [attr.disabled]="isParentTask?'':null" formControlName="Priority">
+          </div>
+        </div>
+        <div class="form-group row" id="rowParent">
+          <label class="col-sm-4 col-form-label">Parent Task</label>
+          <div class="col-sm-7">
+            <input type="text" class="form-control" [attr.disabled]="isParentTask?'':null"
+              [(ngModel)]="selectedParentName" [ngModelOptions]="{standalone: true}">
+          </div>
+          <button id="btnSearchParent" type="button" [attr.disabled]="isParentTask?'':null" data-toggle="modal" data-target="#modalTasks"
+            class="col-sm-1 btn btn-secondary" (click)="searchParent()">Search</button>
+        </div>
+        <div class="form-group row" id="rowStartDate">
+          <label class="col-sm-4 col-form-label"> Start Date</label>
+          <div class="col-sm-8">
+            <input type="date" class="form-control" [attr.disabled]="isParentTask?'':null" formControlName="Start_Date">
+          </div>
+        </div>
+        <div class="form-group row" id="rowEndDate">
+          <label class="col-sm-4 col-form-label"> End Date</label>
+          <div class="col-sm-8">
+            <input type="date" class="form-control" [attr.disabled]="isParentTask?'':null" formControlName="End_Date">
+          </div>
+        </div>
+        <div class="form-group row" id="rowUser">
+          <label class="col-sm-4 col-form-label">User</label>
+          <div class="col-sm-7">
+            <input type="text" class="form-control" [attr.disabled]="isParentTask?'':null"
+              [(ngModel)]="selectedManagerName" [ngModelOptions]="{standalone: true}">
+          </div>
+
+          <button id="btnSearchUser" type="button" class="col-lg-auto btn btn-secondary"
+            [attr.disabled]="isParentTask?'':null" data-toggle="modal" data-target="#modalUsers"
+            (click)="searchUser()">Search</button>
+
+        </div>
+        <div class="form-group row justify-content-end">
+          <div class="col-sm-4"></div>
+          <div class="col-sm-5"></div>
+          <div class="col-sm-2">
+            <button id="btnSubmit" type="Submit" [disabled]="!taskForm.valid" class="btn btn-primary"> Add Task</button>
+          </div>
+          <button id="btnReset" type="button" (click)="resetTaskForm()" class=" col-sm-1  btn btn-primary">
+            Reset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal" id="modalProject" tabindex="-1" role="dialog" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+          Select a Manager
+        </h4>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="projectSelect">Project:</label>
+          <div class="dropdown-content">
+            <input type="text" class="form-control" id="txtSearchTarget" name="txtSearchTarget"
+              [(ngModel)]="txtSearchTarget" placeholder="search...">
+            <div id=divAllProject class="form-group row jumbotron">
+              <table id=tdAllProject class="table table-bordered">
+                <thead class="thead-dark">
+                  <tr>
+                    <th>Select</th>
+                    <th>Project</th>
+                    <th>ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let project of allProject | filterPipe : txtSearchTarget">
+                    <td>
+                      <input class="form-check-input" type="radio" name="radioProject" id="radioProject1"
+                        (change)="selectProjectData($event, project)">
+                    </td>
+                    <td><label class="col-sm-4 col-form-label"> {{project.Project_Name}}</label> </td>
+                    <td><label class="col-sm-4 col-form-label"> {{project.Project_ID}}</label> </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="addProject()">Select</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" id="modalUsers" tabindex="-1" role="dialog" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+          Select a User
+        </h4>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="userSelect">User:</label>
+          <div class="dropdown-content">
+            <input type="text" class="form-control" id="txtSearchTarget" name="txtSearchTarget"
+              [(ngModel)]="txtSearchTarget" placeholder="search...">
+            <div id=divAllUser class="form-group row jumbotron">
+              <table id=tdAllUser class="table table-bordered">
+                <thead class="thead-dark">
+                  <tr>
+                    <th>Select</th>
+                    <th>User</th>
+                    <th>ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let user of allUser | filterPipe : txtSearchTarget">
+                    <td>
+                      <input class="col-ls-1  form-check-input" type="radio" name="radioUser" id="radioUser"
+                        (change)="SelectUserData($event, user)">
+                    </td>
+                    <td><label class="col-ls-auto col-form-label"> {{user.First_Name}}</label> </td>
+                    <td><label class="col-sm-4 col-form-label"> {{user.Employee_ID}}</label> </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="addUser()">Select</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" id="modalTasks" tabindex="-1" role="dialog" tabindex="-1" role="dialog"
+  aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+          Select a Task
+        </h4>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="TaskSelect">Task:</label>
+          <div class="dropdown-content">
+            <input type="text" class="form-control" id="txtSearchTarget" name="txtSearchTarget"
+              [(ngModel)]="txtSearchTarget" placeholder="search...">
+            <div id=divAllTask class="form-group row jumbotron">
+              <table id=tdAllTask class="table table-bordered">
+                <thead class="thead-dark">
+                  <tr>
+                    <th>Select</th>
+                    <th>Task</th>
+                    <th>ID</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let Task of allTask | filterPipe : txtSearchTarget">
+                    <td>
+                      <input class="col-ls-auto  form-check-input" type="radio" name="radioTask" id="radioTask"
+                        (change)="selectTaskData($event, Task)">
+                    </td>
+                    <td><label class="col-ls-auto col-form-label"> {{Task.Task_Name}}</label> </td>
+                    <td><label class="col-sm-auto col-form-label"> {{Task.Task_ID}}</label> </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="addTask()">Select</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
